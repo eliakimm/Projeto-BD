@@ -35,4 +35,4 @@
 ### Modelos feitos com brmodelo:
 
 - [Modelo conceitual;](https://app.brmodeloweb.com/publicview/6a1c80c00b63d48fa75beda8)
-- [Modelo realacional.](https://app.brmodeloweb.com/publicview/6a1c83c60b63d48fa75bee04)
+- [Modelo relacional.](https://app.brmodeloweb.com/publicview/6a1c83c60b63d48fa75bee04)
