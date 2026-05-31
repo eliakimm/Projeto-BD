@@ -37,7 +37,7 @@
 - 10-forum_perguntas
 - 11-forum_respostas
 
-### Modelos feitos com brmodelo:
+### Modelagem:
 
 - [Modelo conceitual;](https://app.brmodeloweb.com/publicview/6a1c80c00b63d48fa75beda8)
 - [Modelo relacional.](https://app.brmodeloweb.com/publicview/6a1c83c60b63d48fa75bee04)
