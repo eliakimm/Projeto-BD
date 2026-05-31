@@ -1,6 +1,11 @@
 # Projeto de Banco de dados: SisAA- Sistema de Acompanhamento Acadêmico
 
-### Stack:
+## O que é?
+
+<p>O projeto consiste no desenvolvimento de um sistema de acompanhamento acadêmico voltado para estudantes universitários. O objetivo principal é permitir o gerenciamento e monitoramento das disciplinas cursadas, desempenho acadêmico e progresso do aluno ao longo dos semestres.</p>
+<p>A aplicação contará com interface gráfica para facilitar a interação do usuário e utilizará um banco de dados relacional para armazenamento seguro e organizado das informações acadêmicas.</p>
+
+### Stack de desenvolvimento:
 - Editor de código: __Visual Studio Code__;
 - Linguagem principal: __Python__;
     - FrameWork: __Flask__.
