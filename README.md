@@ -18,7 +18,7 @@
     - 02_inserts.sql
     - 03_queries.sql
 
-### Entidade:
+### Entidades:
 
 - 1-usuario
 - 2-aluno
