@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SisAA{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <a class="brand" href="{% if usuario_logado.perfil == 'admin' %}{{ url_for('admin_dashboard') }}{% else %}{{ url_for('aluno_dashboard') }}{% endif %}">
+            <span class="brand-mark">SA</span>
+            <span>
+                <strong>SisAA</strong>
+                <small>Acompanhamento academico</small>
+            </span>
+        </a>
+
+        <nav class="menu" aria-label="Menu principal">
+            {% if usuario_logado.perfil == "admin" %}
+            <a href="{{ url_for('admin_dashboard') }}" class="{% if active_page == 'admin' %}active{% endif %}">Painel admin</a>
+            <a href="{{ url_for('cursos') }}" class="{% if active_page == 'cursos' %}active{% endif %}">Gerenciar cursos</a>
+            <a href="{{ url_for('disciplinas') }}" class="{% if active_page == 'disciplinas_forum' %}active{% endif %}">Disciplinas e forum</a>
+            <a href="{{ url_for('avisos') }}" class="{% if active_page == 'avisos' %}active{% endif %}">Gerenciar avisos</a>
+            <a href="{{ url_for('materiais') }}" class="{% if active_page == 'materiais' %}active{% endif %}">Materiais</a>
+            {% else %}
+            <a href="{{ url_for('aluno_dashboard') }}" class="{% if active_page == 'aluno' %}active{% endif %}">Area do aluno</a>
+            <a href="{{ url_for('disciplinas') }}" class="{% if active_page == 'disciplinas_forum' %}active{% endif %}">Disciplinas e forum</a>
+            <a href="{{ url_for('agenda') }}" class="{% if active_page == 'agenda' %}active{% endif %}">Agenda</a>
+            <a href="{{ url_for('atividades') }}" class="{% if active_page == 'atividades' %}active{% endif %}">Atividades</a>
+            <a href="{{ url_for('avisos') }}" class="{% if active_page == 'avisos' %}active{% endif %}">Avisos</a>
+            <a href="{{ url_for('materiais') }}" class="{% if active_page == 'materiais' %}active{% endif %}">Materiais</a>
+            {% endif %}
+            <a href="{{ url_for('perfil') }}" class="{% if active_page == 'perfil' %}active{% endif %}">Perfil</a>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        </nav>
+    </aside>
+
+    <main class="page-shell">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">{% block eyebrow %}SisAA{% endblock %}</p>
+                <h1>{% block heading %}Sistema de Acompanhamento Academico{% endblock %}</h1>
+            </div>
+            <div class="profile-chip">
+                <span class="avatar">{% if usuario_logado.perfil == "admin" %}AD{% else %}AL{% endif %}</span>
+                <span>
+                    <strong>{{ usuario_logado.nome }}</strong>
+                    <small>{{ usuario_logado.identificacao }}</small>
+                </span>
+            </div>
+        </header>
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+            <div class="messages page-messages">
+                {% for categoria, mensagem in mensagens %}
+                <p class="message {{ categoria }}">{{ mensagem }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

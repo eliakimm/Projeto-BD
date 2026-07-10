@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Disciplinas e Forum | SisAA{% endblock %}
+{% block eyebrow %}Estudo colaborativo{% endblock %}
+{% block heading %}Disciplinas e forum{% endblock %}
+
+{% block content %}
+<section class="discipline-forum-grid">
+    <div class="cards-grid single-column">
+        {% for disciplina in disciplinas %}
+        <article class="card">
+            <div class="card-top">
+                <span class="code">{{ disciplina.codigo }}</span>
+                <span>{{ disciplina.carga_horaria }}h</span>
+            </div>
+            <h2>{{ disciplina.nome }}</h2>
+            <p>{{ disciplina.descricao }}</p>
+
+            {% if session.get('usuario', {}).get('perfil') == 'admin' %}
+            <form method="post" action="{{ url_for('excluir_disciplina', id_disciplina=disciplina.id_disciplina) }}">
+            <button type="submit">
+                Excluir disciplina
+            </button>
+
+</form>
+{% endif %}
+
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Forum das disciplinas</h2>
+            <button type="button">Nova pergunta</button>
+        </div>
+
+        <form class="form-grid compact question-form" method="post" action="{{ url_for('forum') }}">
+            <label>Disciplina
+                <select name="id_disciplina">
+                    {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina.id_disciplina }}">{{ disciplina.nome }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Titulo<input type="text" name="titulo" placeholder="Digite sua duvida" required></label>
+            <label>Mensagem<textarea name="texto" rows="4" placeholder="Descreva sua pergunta" required></textarea></label>
+            <button type="submit">Enviar pergunta</button>
+        </form>
+
+        <form method="get" action="{{ url_for('forum') }}" class="form-grid compact" style="margin-bottom:12px;">
+            <label>
+                Buscar perguntas
+                <input type="text" name="q" value="{{ termo_busca or '' }}" placeholder="Busque por palavra-chave" />
+            </label>
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div class="feed compact-feed">
+            {% for pergunta in perguntas %}
+            <article class="feed-item" style="display:block;">
+                <div>
+                    <div class="card-top">
+                        <span class="tag">{{ pergunta.get('disciplina', 'Sem disciplina') }}</span>
+                        <span>{{ pergunta.get('respostas', 0) }} respostas</span>
+                    </div>
+                    <h2>{{ pergunta.get('titulo', '') }}</h2>
+                    <p>{{ pergunta.get('texto', '') }}</p>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+                    <time>{{ pergunta.get('data_postagem', '') }}</time>
+                    {% if session.get('usuario', {}).get('id_user') == pergunta.get('id_user') %}
+                    <div style="display:flex; gap:8px;">
+                        <form method="post" action="{{ url_for('excluir_pergunta', id_pergunta=pergunta.get('id_pergunta')) }}">
+                            <button type="submit">Excluir</button>
+                        </form>
+                        <button type="button" onclick="document.getElementById('edit-pergunta-{{ pergunta.get('id_pergunta') }}').style.display='block'">Editar</button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if session.get('usuario', {}).get('id_user') == pergunta.get('id_user') %}
+                <form id="edit-pergunta-{{ pergunta.get('id_pergunta') }}" method="post" action="{{ url_for('editar_pergunta', id_pergunta=pergunta.get('id_pergunta')) }}" style="display:none; margin-top:12px;">
+                    <label>Título
+                        <input type="text" name="titulo" value="{{ pergunta.get('titulo', '') }}" required>
+                    </label>
+                    <label>Mensagem
+                        <textarea name="texto" rows="3" required>{{ pergunta.get('texto', '') }}</textarea>
+                    </label>
+                    <button type="submit">Salvar</button>
+                </form>
+                {% endif %}
+
+                {% set respostas_da_pergunta = respostas_por_pergunta.get(pergunta.get('id_pergunta'), []) %}
+                {% if pergunta.get('respostas', 0) > 0 and respostas_da_pergunta %}
+                <div class="question-form" style="margin-top:12px;">
+                    <strong>Respostas</strong>
+                    {% for resposta in respostas_da_pergunta %}
+                    <div style="margin:8px 0 0; padding:8px; border:1px solid #e5e7eb; border-radius:8px;">
+                        <p style="margin:0;">{{ resposta.texto }}</p>
+                        <small style="display:block; margin-top:6px; color:#6b7280;">
+                            {% if resposta.autor_nome %}
+                            Por {{ resposta.autor_nome }}
+                            {% else %}
+                            Resposta enviada
+                            {% endif %}
+                            {% if resposta.solucao %}
+                            • <strong>Solução</strong>
+                            {% endif %}
+                        </small>
+                        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                            {% if session.get('usuario', {}).get('id_user') == pergunta.get('id_user') %}
+                            <form method="post" action="{{ url_for('marcar_resposta_solucao', id_resposta=resposta.id_resposta) }}">
+                                <button type="submit">Marcar como solução</button>
+                            </form>
+                            {% endif %}
+                            {% if session.get('usuario', {}).get('id_user') == resposta.id_user %}
+                            <form method="post" action="{{ url_for('excluir_resposta', id_resposta=resposta.id_resposta) }}">
+                                <button type="submit">Excluir</button>
+                            </form>
+                            <button type="button" onclick="document.getElementById('edit-resposta-{{ resposta.id_resposta }}').style.display='block'">Editar</button>
+                            {% endif %}
+                        </div>
+                        {% if session.get('usuario', {}).get('id_user') == resposta.id_user %}
+                        <form id="edit-resposta-{{ resposta.id_resposta }}" method="post" action="{{ url_for('editar_resposta', id_resposta=resposta.id_resposta) }}" style="display:none; margin-top:8px;">
+                            <label>
+                                <textarea name="texto" rows="3" required>{{ resposta.texto }}</textarea>
+                            </label>
+                            <button type="submit">Salvar</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form class="form-grid compact" method="post" action="{{ url_for('forum') }}" style="margin-top:12px;">
+                    <input type="hidden" name="id_pergunta" value="{{ pergunta.get('id_pergunta', '') }}">
+                    <label>
+                        Sua resposta
+                        <textarea name="resposta_texto" rows="3" placeholder="Escreva uma resposta" required></textarea>
+                    </label>
+                    <button type="submit">Responder</button>
+                </form>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

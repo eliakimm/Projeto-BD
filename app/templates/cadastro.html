@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | SisAA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="auth-body">
+    <main class="auth-shell">
+        <section class="auth-panel wide">
+            <a class="brand auth-brand" href="{{ url_for('login') }}">
+                <span class="brand-mark">SA</span>
+                <span>
+                    <strong>SisAA</strong>
+                    <small>Acompanhamento academico</small>
+                </span>
+            </a>
+
+            <div class="auth-copy">
+                <p class="eyebrow">Novo usuario</p>
+                <h1>Cadastro academico</h1>
+            </div>
+
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% if mensagens %}
+                <div class="messages">
+                    {% for categoria, mensagem in mensagens %}
+                    <p class="message {{ categoria }}">{{ mensagem }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+
+            <form class="form-grid two-columns" action="{{ url_for('cadastro') }}" method="post">
+                <label>
+                    Nome completo
+                    <input type="text" name="nome" placeholder="Nome do usuario" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="email" placeholder="seuemail@exemplo.com" required>
+                </label>
+                <label>
+                    Matricula
+                    <input type="text" name="matricula" placeholder="20240001" required>
+                </label>
+                <label>
+                    Curso
+                    <select name="id_curso" required>
+                        <option value="">Selecione</option>
+                        {% for curso in cursos %}
+                        <option value="{{ curso.id_curso }}">{{ curso.nome }}</option>
+                        {% else %}
+                        <option>Sistemas de Informacao</option>
+                        <option>Analise e Desenvolvimento de Sistemas</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Senha
+                    <input type="password" name="senha" placeholder="Crie uma senha" required>
+                </label>
+                <label>
+                    Confirmar senha
+                    <input type="password" name="confirmar_senha" placeholder="Repita a senha" required>
+                </label>
+                <button type="submit">Criar conta</button>
+                <a class="secondary-action" href="{{ url_for('login') }}">Voltar para login</a>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Materiais | SisAA{% endblock %}
+{% block eyebrow %}Apoio ao estudo{% endblock %}
+{% block heading %}Materiais de apoio{% endblock %}
+
+{% block content %}
+
+<section class="panel section-spaced">
+    <div class="panel-header">
+        <h2>Compartilhe materiais com a comunidade</h2>
+        <span class="tag">Colaboração</span>
+    </div>
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="form-grid">
+
+        <div class="form-grid two-columns">
+            <label>
+                Título
+                <input
+                    type="text"
+                    name="titulo"
+                    placeholder="Ex.: Resumo de Banco de Dados"
+                    required>
+            </label>
+
+            <label>
+                Tipo
+                <input
+                    type="text"
+                    name="tipo"
+                    placeholder="Ex.: Apostila, Resumo, Exercício"
+                    required>
+            </label>
+        </div>
+
+        <label>
+            Disciplina
+            <select name="id_disciplina">
+                <option value="">Sem disciplina</option>
+
+                {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id_disciplina }}">
+                    {{ disciplina.nome }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Descrição
+            <textarea
+                name="descricao"
+                placeholder="Descreva o material e como ele pode ajudar os colegas"></textarea>
+        </label>
+
+        <label>
+            Arquivo (PDF)
+            <input
+                type="file"
+                name="arquivo"
+                accept=".pdf,application/pdf"
+                required>
+        </label>
+
+        <button type="submit">
+            Publicar material
+        </button>
+
+    </form>
+</section>
+
+<section class="cards-grid section-spaced">
+
+    {% if materiais %}
+
+        {% for material in materiais %}
+
+        <article class="card">
+
+    <div class="card-top">
+        <span class="tag">{{ material.tipo }}</span>
+        <span>{{ material.disciplina }}</span>
+    </div>
+
+    <h2>{{ material.titulo }}</h2>
+
+    <p>{{ material.descricao }}</p>
+
+    <div class="card-actions">
+
+        <a href="{{ url_for('baixar_material', id_material=material.id_material) }}"
+           class="button">
+            Baixar PDF
+        </a>
+
+        {% if usuario_logado.id_user == material.id_user %}
+
+        <form action="{{ url_for('excluir_material', id_material=material.id_material) }}"
+              method="POST"
+              onsubmit="return confirm('Deseja realmente excluir este material?');">
+
+            <button type="submit">
+                Excluir
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+</article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <article class="card">
+            <h2>Nenhum material publicado</h2>
+            <p>Seja o primeiro a compartilhar um material com a comunidade.</p>
+        </article>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

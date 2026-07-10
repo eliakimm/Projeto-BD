@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil | SisAA{% endblock %}
+{% block eyebrow %}Conta{% endblock %}
+{% block heading %}Meu perfil{% endblock %}
+
+{% block content %}
+<section class="content-grid">
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Dados do usuário</h2>
+        </div>
+        <form method="post" class="form-grid">
+            <input type="hidden" name="acao" value="atualizar">
+            <div class="form-grid two-columns">
+                <label>
+                    Nome
+                    <input type="text" name="nome" value="{{ dados.nome }}" required>
+                </label>
+                <label>
+                    E-mail
+                    <input type="email" name="email" value="{{ dados.email }}" required>
+                </label>
+            </div>
+            {% if perfil == 'aluno' %}
+            <label>
+                Matrícula
+                <input type="text" name="matricula" value="{{ dados.matricula }}">
+            </label>
+            {% endif %}
+            <div class="form-grid two-columns">
+                <label>
+                    Nova senha
+                    <input type="password" name="senha" placeholder="Deixe em branco para manter">
+                </label>
+                <label>
+                    Confirmar senha
+                    <input type="password" name="confirmar_senha" placeholder="Confirme a nova senha">
+                </label>
+            </div>
+            <button type="submit">Salvar alterações</button>
+        </form>
+    </article>
+
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Excluir conta</h2>
+        </div>
+        <p>Esta ação removerá seus dados e não poderá ser desfeita.</p>
+        <form method="post" onsubmit="return confirm('Tem certeza que deseja excluir sua conta?');">
+            <input type="hidden" name="acao" value="deletar">
+            <button type="submit" class="secondary-action">Excluir minha conta</button>
+        </form>
+    </article>
+</section>
+{% endblock %}

@@ -90,9 +90,10 @@ CREATE table forum_pergunta(
 
 CREATE table forum_resposta(
     id_resposta serial PRIMARY KEY,
-    id_pergunta int REFERENCES forum_pergunta(id_pergunta),
+    id_pergunta int REFERENCES forum_pergunta(id_pergunta) on delete CASCADE,
     id_user int REFERENCES usuario(id_user),
     texto TEXT not NULL,
     data_postagem TIMESTAMP DEFAULT now(),
-    id_resposta_pai int REFERENCES forum_resposta(id_resposta)
+    id_resposta_pai int REFERENCES forum_resposta(id_resposta) on delete CASCADE,
+    solucao BOOLEAN DEFAULT false
 );

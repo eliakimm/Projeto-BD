@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Agenda | SisAA{% endblock %}
+{% block eyebrow %}Planejamento{% endblock %}
+{% block heading %}Agenda do aluno{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-header">
+        <h2>Lista de tarefas</h2>
+        <span class="tag">Organize suas entregas</span>
+    </div>
+
+    <form method="post" class="question-form form-grid">
+        <div class="form-grid two-columns">
+            <label>
+                Título
+                <input type="text" name="titulo" placeholder="Ex.: Estudar para prova" required>
+            </label>
+            <label>
+                Data de entrega
+                <input type="date" name="data_entrega" required>
+            </label>
+        </div>
+        <label>
+            Descrição
+            <textarea name="descricao" placeholder="Adicione detalhes da tarefa"></textarea>
+        </label>
+        <button type="submit">Adicionar tarefa</button>
+    </form>
+
+    <div class="todo-list">
+        {% for evento in agenda %}
+        <div class="todo-item">
+            <form method="post" action="{{ url_for('toggle_agenda', id_agenda=evento.id_agenda) }}">
+                <input type="checkbox" onchange="this.form.submit()" {% if evento.concluida %}checked{% endif %}>
+            </form>
+            <span>
+                <strong>{{ evento.titulo }}</strong>
+                <small>{{ evento.descricao }} - entrega em {{ evento.data_entrega }}</small>
+            </span>
+            <em>{% if evento.concluida %}concluída{% else %}pendente{% endif %}</em>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

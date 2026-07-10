@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Cursos | SisAA{% endblock %}
+{% block eyebrow %}Cadastro acadêmico{% endblock %}
+{% block heading %}Cursos{% endblock %}
+
+{% block content %}
+<section class="table-panel">
+    <div class="panel-header">
+        <h2>Cursos cadastrados</h2>
+        <button type="button">Novo curso</button>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Nível</th>
+                    <th>Carga horária</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for curso in cursos %}
+                <tr>
+                    <td>{{ curso.nome }}</td>
+                    <td><span class="tag">{{ curso.nivel }}</span></td>
+                    <td>{{ curso.total_horas }}h</td>
+                    <td>{{ curso.descricao }}</td>
+                    <td>
+                        <form action="{{ url_for('excluir_curso', id_curso=curso.id_curso) }}"
+                        method="POST" onsubmit="return confirm('Deseja realmente excluir este curso?');">
+
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Aluno | SisAA{% endblock %}
+{% block eyebrow %}Area do aluno{% endblock %}
+{% block heading %}Meu acompanhamento{% endblock %}
+
+{% block content %}
+<section class="student-hero">
+    <div>
+        <p class="eyebrow">Resumo do semestre</p>
+        <h2>O que precisa da sua atencao agora</h2>
+        <p>Acompanhe entregas, avisos e disciplinas sem entrar nas telas administrativas.</p>
+    </div>
+</section>
+
+<section class="student-grid">
+    <article class="panel student-main">
+        <div class="panel-header">
+            <h2>Minhas atividades</h2>
+            <a href="{{ url_for('atividades') }}">Ver todas</a>
+        </div>
+        <form class="todo-list">
+            {% for atividade in atividades %}
+            <label class="todo-item">
+                <input type="checkbox" {% if atividade.status == "concluida" %}checked{% endif %}>
+                <span>
+                    <strong>{{ atividade.titulo }}</strong>
+                    <small>{{ atividade.disciplina }} - entrega em {{ atividade.data_entrega }}</small>
+                </span>
+                <em>{{ atividade.status }}</em>
+            </label>
+            {% endfor %}
+        </form>
+    </article>
+
+    <aside class="student-aside">
+        <article class="panel">
+            <div class="panel-header">
+                <h2>Agenda da semana</h2>
+                <a href="{{ url_for('agenda') }}">Abrir agenda</a>
+            </div>
+            <div class="mini-timeline">
+                {% for evento in agenda %}
+                <article>
+                    <time>{{ evento.data_entrega }}</time>
+                    <strong>{{ evento.titulo }}</strong>
+                </article>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="panel">
+            <div class="panel-header">
+                <h2>Indicadores</h2>
+            </div>
+            <div class="student-stats">
+                <span><strong>{{ total_atividades }}</strong> atividades</span>
+                <span><strong>{{ total_disciplinas }}</strong> disciplinas</span>
+                <span><strong>{{ total_materiais }}</strong> materiais</span>
+            </div>
+        </article>
+    </aside>
+</section>
+
+<section class="content-grid section-spaced">
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Avisos recentes</h2>
+            <a href="{{ url_for('avisos') }}">Ver avisos</a>
+        </div>
+        <div class="list">
+            {% for aviso in avisos %}
+            <article class="list-item stacked">
+                <strong>{{ aviso.titulo }}</strong>
+                <span>{{ aviso.texto }}</span>
+                <time>{{ aviso.data_postagem }}</time>
+            </article>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Disciplinas em andamento</h2>
+            <a href="{{ url_for('disciplinas') }}">Forum</a>
+        </div>
+        <div class="discipline-list">
+            {% for disciplina in disciplinas %}
+            <article>
+                <span class="code">{{ disciplina.codigo }}</span>
+                <div>
+                    <strong>{{ disciplina.nome }}</strong>
+                    <small>{{ disciplina.carga_horaria }}h - {{ disciplina.descricao }}</small>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

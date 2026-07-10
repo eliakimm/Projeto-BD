@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | SisAA{% endblock %}
+{% block eyebrow %}Visao geral{% endblock %}
+{% block heading %}Painel academico{% endblock %}
+
+{% block content %}
+<section class="metrics-grid">
+    <article class="metric">
+        <span>Disciplinas</span>
+        <strong>{{ total_disciplinas }}</strong>
+        <small>ativas no semestre</small>
+    </article>
+    <article class="metric">
+        <span>Atividades</span>
+        <strong>{{ total_atividades }}</strong>
+        <small>com entrega prevista</small>
+    </article>
+    <article class="metric">
+        <span>Avisos</span>
+        <strong>{{ total_avisos }}</strong>
+        <small>publicados recentemente</small>
+    </article>
+    <article class="metric">
+        <span>Materiais</span>
+        <strong>{{ total_materiais }}</strong>
+        <small>disponiveis para estudo</small>
+    </article>
+</section>
+
+<section class="content-grid">
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Proximas entregas</h2>
+            <a href="{{ url_for('atividades') }}">Ver atividades</a>
+        </div>
+        <div class="list">
+            {% for atividade in atividades[:3] %}
+            <article class="list-item">
+                <div>
+                    <strong>{{ atividade.titulo }}</strong>
+                    <span>{{ atividade.disciplina }}</span>
+                </div>
+                <time>{{ atividade.data_entrega }}</time>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Avisos recentes</h2>
+            <a href="{{ url_for('avisos') }}">Ver avisos</a>
+        </div>
+        <div class="list">
+            {% for aviso in avisos[:3] %}
+            <article class="list-item stacked">
+                <strong>{{ aviso.titulo }}</strong>
+                <span>{{ aviso.texto }}</span>
+                <time>{{ aviso.data_postagem }}</time>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

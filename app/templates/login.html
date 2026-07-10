@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SisAA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="auth-body">
+    <main class="auth-shell">
+        <section class="auth-panel">
+            <a class="brand auth-brand" href="{{ url_for('login') }}">
+                <span class="brand-mark">SA</span>
+                <span>
+                    <strong>SisAA</strong>
+                    <small>Acompanhamento academico</small>
+                </span>
+            </a>
+
+            <div class="auth-copy">
+                <p class="eyebrow">Acesso ao sistema</p>
+                <h1>Entre na sua conta</h1>
+            </div>
+
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% if mensagens %}
+                <div class="messages">
+                    {% for categoria, mensagem in mensagens %}
+                    <p class="message {{ categoria }}">{{ mensagem }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+
+            <form class="form-grid" action="{{ url_for('login') }}" method="post">
+                <label>
+                    Email
+                    <input type="email" name="email" placeholder="seuemail@exemplo.com" required>
+                </label>
+                <label>
+                    Senha
+                    <input type="password" name="senha" placeholder="Digite sua senha" required>
+                </label>
+                <button type="submit">Entrar</button>
+            </form>
+
+            <!-- <div class="demo-credentials">
+                <strong>Acessos de teste</strong>
+                <span>Admin: admin@sisaa.com / admin123</span>
+                <span>Aluno: aluno@sisaa.com / aluno123</span>
+            </div> -->
+
+            <p class="auth-footer">Ainda nao possui conta? <a href="{{ url_for('cadastro') }}">Criar cadastro</a></p>
+        </section>
+    </main>
+</body>
+</html>

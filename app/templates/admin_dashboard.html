@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Admin | SisAA{% endblock %}
+{% block eyebrow %}Painel administrativo{% endblock %}
+{% block heading %}Gerenciar SisAA{% endblock %}
+
+{% block content %}
+<section class="admin-hero">
+    <div>
+        <p class="eyebrow">Console de gestao</p>
+        <h2>Cadastros, comunicados e estrutura academica</h2>
+        <p>Use este painel para manter cursos, disciplinas e avisos disponiveis para os alunos.</p>
+    </div>
+    <div class="admin-summary">
+        <span>{{ total_cursos }} cursos</span>
+        <span>{{ total_disciplinas }} disciplinas</span>
+        <span>{{ total_usuarios }} usuarios</span>
+    </div>
+</section>
+
+<section class="admin-workspace">
+    <div class="admin-actions">
+        <article class="panel action-panel primary-action">
+            <div>
+                <span class="action-icon">C</span>
+                <h2>Novo curso</h2>
+                <p>Cadastre cursos para organizar a grade dos alunos.</p>
+            </div>
+            <a href="#form-curso">Adicionar</a>
+        </article>
+
+        <article class="panel action-panel">
+            <div>
+                <span class="action-icon">D</span>
+                <h2>Nova disciplina</h2>
+                <p>Inclua disciplinas e vincule ao curso correspondente.</p>
+            </div>
+            <a href="#form-disciplina">Adicionar</a>
+        </article>
+
+        <article class="panel action-panel warning-action">
+            <div>
+                <span class="action-icon">A</span>
+                <h2>Novo aviso</h2>
+                <p>Publique comunicados que aparecem na area do aluno.</p>
+            </div>
+            <a href="#form-aviso">Publicar</a>
+        </article>
+    </div>
+
+    <aside class="panel admin-side">
+        <div class="panel-header">
+            <h2>Ultimos avisos publicados</h2>
+            <a href="{{ url_for('avisos') }}">Ver todos</a>
+        </div>
+        <div class="list">
+            {% for aviso in avisos %}
+            <article class="list-item stacked">
+                <strong>{{ aviso.titulo }}</strong>
+                <span>{{ aviso.texto }}</span>
+                <time>{{ aviso.data_postagem }}</time>
+            </article>
+            {% endfor %}
+        </div>
+    </aside>
+</section>
+
+<section class="admin-forms-grid">
+    <article class="panel" id="form-curso">
+        <div class="panel-header">
+            <h2>Adicionar curso</h2>
+        </div>
+        <form class="form-grid compact" action="{{ url_for('admin_dashboard') }}" method="post">
+            <input type="hidden" name="acao" value="curso">
+            <label>Nome do curso<input type="text" name="nome" required></label>
+            <label>Nivel<input type="text" name="nivel" placeholder="Graduacao" required></label>
+            <label>Carga horaria<input type="number" name="total_horas" min="1" required></label>
+            <label>Descricao<textarea name="descricao" rows="4"></textarea></label>
+            <button type="submit">Salvar curso</button>
+        </form>
+    </article>
+
+    <article class="panel" id="form-disciplina">
+        <div class="panel-header">
+            <h2>Adicionar disciplina</h2>
+        </div>
+        <form class="form-grid compact" action="{{ url_for('admin_dashboard') }}" method="post">
+            <input type="hidden" name="acao" value="disciplina">
+            <label>Codigo<input type="text" name="codigo" placeholder="BD101" required></label>
+            <label>Nome<input type="text" name="nome" required></label>
+            <label>Carga horaria<input type="number" name="carga_horaria" min="1" required></label>
+            <label>Curso
+                <select name="id_curso" required>
+                    <option value="">Selecione</option>
+                    {% for curso in cursos %}
+                    <option value="{{ curso.id_curso }}">{{ curso.nome }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Descricao<textarea name="descricao" rows="4"></textarea></label>
+            <button type="submit">Salvar disciplina</button>
+        </form>
+    </article>
+
+    <article class="panel" id="form-aviso">
+        <div class="panel-header">
+            <h2>Publicar aviso</h2>
+        </div>
+        <form class="form-grid compact" action="{{ url_for('admin_dashboard') }}" method="post">
+            <input type="hidden" name="acao" value="aviso">
+            <label>Titulo<input type="text" name="titulo" required></label>
+            <label>Mensagem<textarea name="texto" rows="6" required></textarea></label>
+            <button type="submit">Publicar aviso</button>
+        </form>
+    </article>
+</section>
+
+<section class="table-panel section-spaced">
+    <div class="panel-header">
+        <h2>Estrutura academica cadastrada</h2>
+        <a href="{{ url_for('disciplinas') }}">Abrir disciplinas</a>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Disciplina</th>
+                    <th>Carga</th>
+                    <th>Descricao</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disciplina in disciplinas %}
+                <tr>
+                    <td>{{ disciplina.codigo }}</td>
+                    <td>{{ disciplina.nome }}</td>
+                    <td>{{ disciplina.carga_horaria }}h</td>
+                    <td>{{ disciplina.descricao }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

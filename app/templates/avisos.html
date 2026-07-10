@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Avisos | SisAA{% endblock %}
+{% block eyebrow %}Comunicados{% endblock %}
+{% block heading %}Avisos do sistema{% endblock %}
+
+{% block content %}
+<section class="feed">
+    {% for aviso in avisos %}
+    <article class="feed-item">
+        <div>
+            <h2>{{ aviso.titulo }}</h2>
+            <p>{{ aviso.texto }}</p>
+        </div>
+        <time>{{ aviso.data_postagem }}</time>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Atividades | SisAA{% endblock %}
+{% block eyebrow %}Avaliacoes e tarefas{% endblock %}
+{% block heading %}Atividades{% endblock %}
+
+{% block content %}
+<section class="panel section-spaced">
+    <div class="panel-header">
+        <h2>Nova atividade</h2>
+        <span class="tag">Planeje suas entregas</span>
+    </div>
+    <form method="post" class="form-grid">
+        <div class="form-grid two-columns">
+            <label>
+                Título
+                <input type="text" name="titulo" placeholder="Ex.: Trabalho de Banco de Dados" required>
+            </label>
+            <label>
+                Data de entrega
+                <input type="date" name="data_entrega" required>
+            </label>
+        </div>
+        <label>
+            Disciplina
+            <select name="id_disciplina">
+                <option value="">Sem disciplina</option>
+                {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id_disciplina }}">{{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Descrição
+            <textarea name="descricao" placeholder="Descreva a atividade ou os detalhes da entrega"></textarea>
+        </label>
+        <button type="submit">Cadastrar atividade</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <div class="panel-header">
+        <h2>Entregas cadastradas</h2>
+        <span class="tag">Acompanhe o que ainda falta</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Disciplina</th>
+                    <th>Entrega</th>
+                    <th>Status</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atividade in atividades %}
+                <tr>
+                    <td>{{ atividade.titulo }}</td>
+                    <td>{{ atividade.disciplina }}</td>
+                    <td>{{ atividade.data_entrega }}</td>
+                    <td>
+                        {% if atividade.id_agenda %}
+                        <form method="post" action="{{ url_for('toggle_atividade', id_agenda=atividade.id_agenda) }}" style="display:inline;">
+                            <label style="display:flex; align-items:center; gap:8px;">
+                                <input type="checkbox" onchange="this.form.submit()" {% if atividade.concluida %}checked{% endif %}>
+                                <span>{% if atividade.concluida %}Concluída{% else %}Pendente{% endif %}</span>
+                            </label>
+                        </form>
+                        {% else %}
+                        <span class="tag">Sem vínculo</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ atividade.descricao }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
