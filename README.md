@@ -17,7 +17,11 @@
 - *| app*
     - app.py
     - *| database*
+         - *|crud
+         - bd_config.py
          - conexao.py
+    - *|static
+    - *|templates
 - *| sql*
     - 01_schema.sql
     - 02_inserts.sql
